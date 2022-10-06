@@ -7,6 +7,8 @@ gem "erubis"
 gem "pry"
 gem "redcarpet"
 gem "puma"
+gem 'rake'
 
 gem "rack-test"
 gem "minitest"
+gem 'minitest-reporters'

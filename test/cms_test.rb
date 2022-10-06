@@ -26,7 +26,7 @@ class CMSTest < Minitest::Test
   def test_file_not_found
     get "/file_does_not_exist.txt"
     
-    #assert_equal(200, last_response.status)
+    # assert_equal(200, last_response.status)
     # Instead, use 302 to assert the user was directed
     assert_equal(302, last_response.status)
 
@@ -40,5 +40,15 @@ class CMSTest < Minitest::Test
     # Check that the error message disappears
     get "/"
     refute_includes(last_response.body, "file_does_not_exist.txt does not exist")
+  end
+
+  def test_render_markdown
+    get "/about.md"
+
+    assert_equal(200, last_response.status)
+
+    assert_equal("text/html;charset=utf-8", last_response["Content-Type"])
+    
+    assert_equal("<h2>test</h2>\n\n<h1>test</h1>\n\n<h3>test</h3>\n<h2>test</h2>\n\n<h1>test</h1>\n\n<h3>test</h3>", last_response.body )
   end
 end

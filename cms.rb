@@ -2,6 +2,7 @@ require "sinatra"
 require "sinatra/reloader"
 require "tilt/erubis"
 require "pry"
+require 'redcarpet'
 
 root = File.expand_path("..", __FILE__)
 
@@ -12,12 +13,36 @@ configure do
 end
 
 before do
-end
-
-get "/" do
+  # For rendering md files into HTML
+  
   @files = Dir.glob(root + "/data/*").map do |path|
     File.basename(path)
   end
+end
+
+# Helper methods
+def render_markdown(text)
+  markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML)
+  markdown.render(text)
+end
+
+# Get content
+def file_content(path)
+  case File.extname(path)
+  when ".md"
+    text = File.read(path)
+    render_markdown(text)
+  when ".txt"
+    # Allows for formatting of plain text
+    # Note: if I do this for md rendering, it will render out the pure HTML(not what I want)
+    headers["Content-Type"] = "text/plain"
+    File.read(path)
+  else
+    "hi"
+  end
+end
+
+get "/" do
   erb :index
 end
 
@@ -25,9 +50,8 @@ get "/:filename" do
   file_path = root + "/data/" + params[:filename]
   filename = params[:filename]
 
-  headers["Content-Type"] = "text/plain"
   if File.file?(file_path)
-    File.read(file_path)
+    file_content(file_path)
   else
     session[:success] = "#{filename} does not exist"
     redirect "/"
