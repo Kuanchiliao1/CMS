@@ -3,6 +3,7 @@ ENV["RACK_ENV"] = "test"
 require "minitest/autorun"
 require "rack/test"
 require "minitest/reporters"
+require "rake"
 Minitest::Reporters.use!
 
 require_relative "../cms"
@@ -49,6 +50,10 @@ class CMSTest < Minitest::Test
 
     assert_equal("text/html;charset=utf-8", last_response["Content-Type"])
     
-    assert_equal("<h2>test</h2>\n\n<h1>test</h1>\n\n<h3>test</h3>\n<h2>test</h2>\n\n<h1>test</h1>\n\n<h3>test</h3>", last_response.body )
+    assert_equal("<h1>Ruby is...</h1>\n\n<p>A dynamic, open source programming language with a focus on simplicity and productivity. It has an elegant syntax that is natural to read and easy to write.</p>\n", last_response.body )
+  end
+
+  def test_edit_file
+
   end
 end

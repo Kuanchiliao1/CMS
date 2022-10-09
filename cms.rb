@@ -37,8 +37,6 @@ def file_content(path)
     # Note: if I do this for md rendering, it will render out the pure HTML(not what I want)
     headers["Content-Type"] = "text/plain"
     File.read(path)
-  else
-    "hi"
   end
 end
 
@@ -58,3 +56,23 @@ get "/:filename" do
   end
 end
 
+get "/:filename/edit" do
+  file_path = root + "/data/" + params[:filename]
+  filename = params[:filename]
+  
+  @file = File.read(file_path)
+  erb :edit
+end
+
+post "/:filename/edit" do
+  # Q for later: how is edit.erb saving the text to params[:text]?
+  # A: Bc the `name` property in erb is "text" 
+  filename = params[:filename]
+
+  file_path = root + "/data/" + params[:filename]
+
+  File.write(file_path, params[:text])
+
+  session[:success] = "you updated the file!"
+  redirect "/"
+end
