@@ -1,8 +1,5 @@
 <p><%= session.delete(:success)%></p>
 
 <ul>
-  <% @files.each do |file| %>
-    <li><a href=<%= "'/#{file}'" %>><%= file %></a></li>
-    <a class="button" href="/<%= file %>/edit">Edit</a>
-  <% end %>
+ <%= display_links %>
 </ul>

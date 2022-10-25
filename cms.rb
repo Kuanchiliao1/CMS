@@ -15,8 +15,17 @@ end
 before do
   # For rendering md files into HTML
   
+  # The glob method returns an array of the matching filepaths put in as an argument
   @files = Dir.glob(root + "/data/*").map do |path|
     File.basename(path)
+  end
+end
+
+helpers do
+  def display_links
+    @files.map do |file|
+      "<li><a href='/#{file}'</a>#{file}</li><a class='button' href='/#{file}/edit'>Edit</a>"
+    end.join
   end
 end
 
