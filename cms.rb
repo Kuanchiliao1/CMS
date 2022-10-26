@@ -29,6 +29,14 @@ helpers do
   end
 end
 
+def data_path
+  if ENV["RACK_ENV"] == "test"
+    File.expand_path("../test/data", __FILE__)
+  else
+    File.expand_path("../data", __FILE__)
+  end
+end
+
 # Helper methods
 def render_markdown(text)
   markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML)
@@ -60,14 +68,14 @@ get "/:filename" do
   if File.file?(file_path)
     file_content(file_path)
   else
-    session[:success] = "#{filename} does not exist"
+    session[:failure] = "#{filename} does not exist"
     redirect "/"
   end
 end
 
 get "/:filename/edit" do
   file_path = root + "/data/" + params[:filename]
-  filename = params[:filename]
+  @filename = params[:filename]
   
   @file = File.read(file_path)
   erb :edit
@@ -77,11 +85,10 @@ post "/:filename/edit" do
   # Q for later: how is edit.erb saving the text to params[:text]?
   # A: Bc the `name` property in erb is "text" 
   filename = params[:filename]
-
   file_path = root + "/data/" + params[:filename]
 
   File.write(file_path, params[:text])
 
-  session[:success] = "you updated the file!"
+  session[:success] = "you updated #{filename}!"
   redirect "/"
 end

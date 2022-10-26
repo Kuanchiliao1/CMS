@@ -1,6 +1,7 @@
 ENV["RACK_ENV"] = "test"
 
 require "minitest/autorun"
+# Gives access to Rack::Test helper methods
 require "rack/test"
 require "minitest/reporters"
 require "rake"
@@ -10,6 +11,10 @@ require_relative "../cms"
 
 class CMSTest < Minitest::Test
   include Rack::Test::Methods
+
+  def setup
+    File.write()
+  end
 
   def app
     Sinatra::Application
@@ -54,6 +59,15 @@ class CMSTest < Minitest::Test
   end
 
   def test_edit_file
+    # Test whether text.txt file exists
+    # Send a get request for the edit
+      # Expect 200 status
+    # Send a post request for the edit
+      # Send the edited value
+      # Test to make sure that the edited value is the new value of the file
+    get "/test.txt/edit"
+    assert_equal(200, last_response.status)
 
+    post "/test.txt/edit"
   end
 end
